@@ -15,6 +15,7 @@ void ins_en_tete(TypePtrListe *adr_liste, int val, char bool_affiche);
 void ins_pos_k(TypePtrListe *adr_liste, int val, int pos, char bool_affiche);
 void suppr_en_tete(TypePtrListe *adr_liste, char bool_affiche);
 void suppr_pos_k(TypePtrListe *adr_liste, int k, char bool_affiche);
+void accesVal(TypePtrListe *adr_liste, int val, TypePtrListe *adr_ptrCell);
 
 
 /**************************************FONCTIONS**************************************/
@@ -29,7 +30,7 @@ struct TypeChaine80{
 
 typedef struct TypeCell{
     int info;
-    TypeCell *suiv;
+    TypePtrListe suiv;
 };
 
 
@@ -151,9 +152,11 @@ void suppr_en_tete(TypePtrListe *adr_liste, char bool_affiche){
         return;
     }
 
+    //raccordements
     TypePtrListe p = *adr_liste;
     *adr_liste = p -> suiv;
-    free(p);
+
+    free(p); //supression
 
     if (bool_affiche=='T') afficherListe(adr_liste);
 }
@@ -173,6 +176,7 @@ void suppr_pos_k(TypePtrListe *adr_liste, int k, char bool_affiche){
     TypePtrListe p_prec = NULL, p = *adr_liste;
     int i = 1;
 
+    //placement a la bonne position
     while(p != NULL && i < k){
         p_prec = p;
         p = p -> suiv;
@@ -189,25 +193,41 @@ void suppr_pos_k(TypePtrListe *adr_liste, int k, char bool_affiche){
     suppr_en_tete(&p_prec -> suiv, bool_affiche);
 }
 
+void accesVal(TypePtrListe *adr_liste, int val, TypePtrListe *adr_ptrCell){
 
+    //variables
+    TypePtrListe p = *adr_liste;
+
+    while(p != NULL){
+        if(p -> info == val){//cas du match
+        printf("%d\n", p->info);
+        adr_ptrCell = p; return;
+        }
+        p = p -> suiv; //sinon incrementation
+    }printf("pas ok");
+    *adr_ptrCell = NULL; // si on ne trouve pas
+}
 /****************************************CORPS****************************************/
 
 int main()
 {
     TypePtrListe *maListe = (TypePtrListe*) malloc(sizeof(TypePtrListe));
 
-    ins_pos_k(maListe, 56, 1, 'T');
-    ins_pos_k(maListe, 33, 1, 'T');
-    ins_en_tete(maListe, 1, 'T');
-    ins_pos_k(maListe, 44, 3, 'T');
-    ins_en_tete(maListe, 2, 'T');
-    ins_en_tete(maListe, 3, 'T');
-    ins_pos_k(maListe, 88, 7, 'T');
-    afficherListe(maListe);
-    ins_pos_k(maListe, 88, 9, 'T');
-    suppr_en_tete(maListe, 'T');
+    ins_pos_k(maListe, 56, 1, 'F');
+    ins_pos_k(maListe, 33, 1, 'F');
+    ins_en_tete(maListe, 1, 'F');
+    ins_pos_k(maListe, 44, 3, 'F');
+    ins_en_tete(maListe, 2, 'F');
+    ins_en_tete(maListe, 3, 'F');
+    ins_pos_k(maListe, 88, 7, 'F');
+    ins_pos_k(maListe, 88, 9, 'F');
+    suppr_en_tete(maListe, 'F');
     suppr_pos_k(maListe, 10, 0);
     afficherListe(maListe);
 
+    printf("\n");
+    TypePtrListe *adr_ptrCell = (TypePtrListe*) malloc(sizeof(TypePtrListe));
+    accesVal(maListe, 44, adr_ptrCell);
+    //printf("%d\n", adr_ptrCell->info);
     return 0;
 }
