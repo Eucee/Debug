@@ -26,7 +26,7 @@ typedef struct TypeCell{
     int info;
     TypeCell *suiv;
 };
-/*
+
 void afficher_erreur(char typeErreur){
     printf("Erreur: ");
     switch(typeErreur){
@@ -40,7 +40,7 @@ void afficher_erreur(char typeErreur){
             printf("position erronee\n");
             break;
     }
-}*/
+}
 
 TypePtrListe *creation_elem(int val){
 TypePtrListe cell = (TypeCell*) malloc(sizeof(TypeCell));
@@ -94,13 +94,49 @@ void supprimer_en_tete(TypePtrListe *adr_liste){
     free(p);
 }
 
+void inserer_pos_k(TypePtrListe *adr_liste, int val, int pos){
+
+    //verification d'existence de liste
+    if (adr_liste == NULL)
+    {
+        afficher_erreur('L');
+        return;
+    }
+
+    TypePtrListe p_prec = NULL, p = *adr_liste, p_nouv;
+    int i = 1;
+
+    while(p != NULL && i < pos){
+        p_prec = p;
+        p = p -> suiv;
+        i++;
+    }
+    if (p == NULL){
+        if(pos!= i){
+            afficher_erreur('P');
+            return;
+        }//sinon k==i, insertion en debut de liste
+        p_nouv=creation_elem(val);
+        if(pos == 1){
+            inserer_en_tete(adr_liste,val);
+            return;
+        }//sinon k>1, insertion en fin de liste
+        p_nouv -> suiv = NULL;
+        p_prec -> suiv = p_nouv;
+        return;
+    }//sinon insertion en milieu de liste
+    p_nouv=creation_elem(val);
+    inserer_en_tete(&p_prec -> suiv, val);
+}
+
 int main()
 {
 TypePtrListe *maListe = malloc(sizeof(TypePtrListe));
 inserer_en_tete(maListe, 1);
 inserer_en_tete(maListe, 2);
 inserer_en_tete(maListe, 3);
-supprimer_en_tete(maListe);
+inserer_pos_k(maListe, 56, 2);
+//supprimer_en_tete(maListe);
 afficherListe(maListe);
 
 TypePtrListe ptr3=(TypePtrListe*) malloc(sizeof(TypeCell)), coucou;
