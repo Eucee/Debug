@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1477755339 source:/home/eucee/Documents/C/testsdl/Alog2/main.c
+	<stdio.h>
+	<stdlib.h>
+
+1477761654 source:/media/eucee/Windows8_OS/Users/etien_000/Google Drive/COURS/M2 Bioinfo/Algo_progra/Rapport_EM/debug/main.c
+	<stdio.h>
+	<stdlib.h>
+

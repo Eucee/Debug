@@ -74,21 +74,34 @@ void afficherListe(TypePtrListe *adr_liste){
 void inserer_en_tete(TypePtrListe *adr_liste, int val){
 
     // creation du nouvel element
-    TypePtrListe p_nouv = (TypeCell*) malloc(sizeof(TypeCell));
-    p_nouv -> info = val;
+    TypePtrListe p_nouv;
+    p_nouv=creation_elem(val);
     // insertion de l'element au debut de la liste
     p_nouv -> suiv = *adr_liste;
     *adr_liste = p_nouv;
 }
 
+void supprimer_en_tete(TypePtrListe *adr_liste){
+
+    /*if (adr_liste == NULL)
+    {
+        afficher_erreur('L');
+        return;
+    }*/
+
+    TypePtrListe p = *adr_liste;
+    *adr_liste = p->suiv;
+    free(p);
+}
 
 int main()
 {
-/*TypePtrListe *maListe = malloc(sizeof(TypePtrListe));
+TypePtrListe *maListe = malloc(sizeof(TypePtrListe));
 inserer_en_tete(maListe, 1);
 inserer_en_tete(maListe, 2);
 inserer_en_tete(maListe, 3);
-afficherListe(maListe);*/
+supprimer_en_tete(maListe);
+afficherListe(maListe);
 
 TypePtrListe ptr3=(TypePtrListe*) malloc(sizeof(TypeCell)), coucou;
 ptr3->suiv=NULL;
