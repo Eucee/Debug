@@ -138,7 +138,7 @@ void ins_pos_k(TypePtrListe *adr_liste, int val, int k){
             return;
         }//sinon k>1, insertion en fin de liste
         p_nouv=creation_elem(val);
-        p_nouv -> suiv = NULL;
+        p_nouv -> suiv = p_prec -> suiv;
         p_prec -> suiv = p_nouv;
         return;
     }//sinon insertion en milieu de liste
@@ -184,17 +184,11 @@ void suppr_pos_k(TypePtrListe *adr_liste, int val, int k){
     if(k==1){ //insertion en debut de liste (cas de liste vide ET de liste preexistante)
         ins_en_tete(adr_liste, val);
         return;
-        }
-    if (p == NULL){
-        if(k!= i){//k > longueur de la liste
+        }//sinon k>1
+    if (p == NULL){//k > i (k>longueur de la liste)
             afficher_erreur('P');
             return;
-        }//sinon k>1, insertion en fin de liste
-        p_nouv=creation_elem(val);
-        p_nouv -> suiv = NULL;
-        p_prec -> suiv = p_nouv;
-        return;
-    }//sinon insertion en milieu de liste
+    }//sinon insertion en milieu de liste OU en fin de liste (p == NULL);
     ins_en_tete(&p_prec -> suiv, val);
 }
 
@@ -219,7 +213,7 @@ int main()
     afficherListe(maListe);
     ins_pos_k(maListe, 88, 7);
     afficherListe(maListe);
-    ins_pos_k(maListe, 88, 8);
+    ins_pos_k(maListe, 88, 9);
     afficherListe(maListe);
     suppr_en_tete(maListe);
     afficherListe(maListe);
