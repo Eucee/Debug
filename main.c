@@ -11,8 +11,8 @@ typedef struct TypeCell TypeCell;
 void afficher_erreur(char typeErreur);
 TypePtrListe *creation_elem(int val);
 void afficherListe(TypePtrListe *adr_liste);
-void ins_en_tete(TypePtrListe *adr_liste, int val);
-void ins_pos_k(TypePtrListe *adr_liste, int val, int pos);
+void ins_en_tete(TypePtrListe *adr_liste, int val, char bool_affiche);
+void ins_pos_k(TypePtrListe *adr_liste, int val, int pos, char bool_affiche);
 void suppr_en_tete(TypePtrListe *adr_liste);
 
 
@@ -32,6 +32,8 @@ typedef struct TypeCell{
 };
 
 
+
+
 //Fonctions
 
 ////////////////////////////////////////////////
@@ -39,9 +41,6 @@ typedef struct TypeCell{
 void afficher_erreur(char typeErreur){
     printf("Erreur: ");
     switch(typeErreur){
-        case 'M':
-            printf("allocation memoire.\n");
-            break;
         case 'L':
             printf("liste vide.\n");
             break;
@@ -59,8 +58,7 @@ TypePtrListe *creation_elem(int val){
 
     //verification de reussite
     if(cell == NULL){
-    afficher_erreur('M');
-    return;
+    exit(1);
     }
 
     return cell;
@@ -85,12 +83,12 @@ void afficherListe(TypePtrListe *adr_liste){
         printf("%d -> ", p->info);
         p = p -> suiv;
     }
-    printf("NULL\n"); //marquer la fin de list
+    printf("NULL\n"); //marquer la fin de liste
 }
 
 ////////////////////////////////////////////////
 
-void ins_en_tete(TypePtrListe *adr_liste, int val){
+void ins_en_tete(TypePtrListe *adr_liste, int val, char bool_affiche){
 
     //verification d'existence de liste
     if (adr_liste == NULL)
@@ -105,11 +103,13 @@ void ins_en_tete(TypePtrListe *adr_liste, int val){
     // insertion de l'element au debut de la liste
     p_nouv -> suiv = *adr_liste;
     *adr_liste = p_nouv;
+
+    if (bool_affiche=='T') afficherListe(adr_liste);
 }
 
 ////////////////////////////////////////////////
 
-void ins_pos_k(TypePtrListe *adr_liste, int val, int k){
+void ins_pos_k(TypePtrListe *adr_liste, int val, int k, char bool_affiche){
 
     //verification d'existence de liste
     if (adr_liste == NULL)
@@ -129,20 +129,14 @@ void ins_pos_k(TypePtrListe *adr_liste, int val, int k){
         i++;
     }
     if(k==1){ //insertion en debut de liste (cas de liste vide [p == NULL] ET de liste preexistante)
-        ins_en_tete(adr_liste, val);
+        ins_en_tete(adr_liste, val, bool_affiche);
         return;
-        }
-    if (p == NULL){
-        if(k!= i){//k > longueur de la liste
+        }//sinon k>1
+    if (p == NULL){//k > i (k>longueur de la liste)
             afficher_erreur('P');
             return;
-        }//sinon k>1, insertion en fin de liste
-        p_nouv=creation_elem(val);
-        p_nouv -> suiv = p_prec -> suiv;
-        p_prec -> suiv = p_nouv;
-        return;
-    }//sinon insertion en milieu de liste
-    ins_en_tete(&p_prec -> suiv, val);
+    }//sinon insertion en milieu de liste OU en fin de liste (p == NULL);
+    ins_en_tete(&p_prec -> suiv, val, bool_affiche);
 }
 
 ////////////////////////////////////////////////
@@ -163,7 +157,7 @@ void suppr_en_tete(TypePtrListe *adr_liste){
 
 ////////////////////////////////////////////////
 
-void suppr_pos_k(TypePtrListe *adr_liste, int val, int k){
+/*void suppr_pos_k(TypePtrListe *adr_liste, int val, int k){
 
     //verification d'existence de liste
     if (adr_liste == NULL)
@@ -173,7 +167,7 @@ void suppr_pos_k(TypePtrListe *adr_liste, int val, int k){
     }
 
     //variables
-    TypePtrListe p_prec = NULL, p = *adr_liste, p_nouv;
+    TypePtrListe p_prec = NULL, p = *adr_liste;
     int i = 1;
 
     while(p != NULL && i < k){
@@ -182,15 +176,15 @@ void suppr_pos_k(TypePtrListe *adr_liste, int val, int k){
         i++;
     }
     if(k==1){ //insertion en debut de liste (cas de liste vide ET de liste preexistante)
-        ins_en_tete(adr_liste, val);
+        suppr_en_tete(adr_liste);
         return;
         }//sinon k>1
     if (p == NULL){//k > i (k>longueur de la liste)
             afficher_erreur('P');
             return;
     }//sinon insertion en milieu de liste OU en fin de liste (p == NULL);
-    ins_en_tete(&p_prec -> suiv, val);
-}
+    supr_en_tete(&p_prec -> suiv);
+}*/
 
 
 /****************************************CORPS****************************************/
@@ -199,8 +193,8 @@ int main()
 {
     TypePtrListe *maListe = (TypePtrListe*) malloc(sizeof(TypePtrListe));
 
-    ins_pos_k(maListe, 56, 1);
-    afficherListe(maListe);
+    ins_pos_k(maListe, 56, 1, 'T');
+    /*afficherListe(maListe);
     ins_pos_k(maListe, 33, 1);
     afficherListe(maListe);
     ins_en_tete(maListe, 1);
@@ -217,6 +211,7 @@ int main()
     afficherListe(maListe);
     suppr_en_tete(maListe);
     afficherListe(maListe);
+
 
    /* TypePtrListe ptr3 = (TypePtrListe*) malloc(sizeof(TypeCell)), coucou;
     ptr3 -> suiv=NULL;
