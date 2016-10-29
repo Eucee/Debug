@@ -13,7 +13,8 @@ TypePtrListe *creation_elem(int val);
 void afficherListe(TypePtrListe *adr_liste);
 void ins_en_tete(TypePtrListe *adr_liste, int val, char bool_affiche);
 void ins_pos_k(TypePtrListe *adr_liste, int val, int pos, char bool_affiche);
-void suppr_en_tete(TypePtrListe *adr_liste);
+void suppr_en_tete(TypePtrListe *adr_liste, char bool_affiche);
+void suppr_pos_k(TypePtrListe *adr_liste, int k, char bool_affiche);
 
 
 /**************************************FONCTIONS**************************************/
@@ -119,7 +120,7 @@ void ins_pos_k(TypePtrListe *adr_liste, int val, int k, char bool_affiche){
     }
 
     //variables
-    TypePtrListe p_prec = NULL, p = *adr_liste, p_nouv;
+    TypePtrListe p_prec = NULL, p = *adr_liste;
     int i = 1;
 
     //placement a la bonne position
@@ -132,7 +133,7 @@ void ins_pos_k(TypePtrListe *adr_liste, int val, int k, char bool_affiche){
         ins_en_tete(adr_liste, val, bool_affiche);
         return;
         }//sinon k>1
-    if (p == NULL){//k > i (k>longueur de la liste)
+    if (p == NULL && k!= i){//k > i (k>longueur de la liste)
             afficher_erreur('P');
             return;
     }//sinon insertion en milieu de liste OU en fin de liste (p == NULL);
@@ -141,7 +142,7 @@ void ins_pos_k(TypePtrListe *adr_liste, int val, int k, char bool_affiche){
 
 ////////////////////////////////////////////////
 
-void suppr_en_tete(TypePtrListe *adr_liste){
+void suppr_en_tete(TypePtrListe *adr_liste, char bool_affiche){
 
     //verification d'existence de liste
     if (adr_liste == NULL)
@@ -153,11 +154,13 @@ void suppr_en_tete(TypePtrListe *adr_liste){
     TypePtrListe p = *adr_liste;
     *adr_liste = p -> suiv;
     free(p);
+
+    if (bool_affiche=='T') afficherListe(adr_liste);
 }
 
 ////////////////////////////////////////////////
 
-/*void suppr_pos_k(TypePtrListe *adr_liste, int val, int k){
+void suppr_pos_k(TypePtrListe *adr_liste, int k, char bool_affiche){
 
     //verification d'existence de liste
     if (adr_liste == NULL)
@@ -176,15 +179,15 @@ void suppr_en_tete(TypePtrListe *adr_liste){
         i++;
     }
     if(k==1){ //insertion en debut de liste (cas de liste vide ET de liste preexistante)
-        suppr_en_tete(adr_liste);
+        suppr_en_tete(adr_liste, bool_affiche);
         return;
         }//sinon k>1
-    if (p == NULL){//k > i (k>longueur de la liste)
+    if (p == NULL && k!= i){//k > i (k>longueur de la liste)
             afficher_erreur('P');
             return;
     }//sinon insertion en milieu de liste OU en fin de liste (p == NULL);
-    supr_en_tete(&p_prec -> suiv);
-}*/
+    suppr_en_tete(&p_prec -> suiv, bool_affiche);
+}
 
 
 /****************************************CORPS****************************************/
@@ -194,33 +197,17 @@ int main()
     TypePtrListe *maListe = (TypePtrListe*) malloc(sizeof(TypePtrListe));
 
     ins_pos_k(maListe, 56, 1, 'T');
-    /*afficherListe(maListe);
-    ins_pos_k(maListe, 33, 1);
+    ins_pos_k(maListe, 33, 1, 'T');
+    ins_en_tete(maListe, 1, 'T');
+    ins_pos_k(maListe, 44, 3, 'T');
+    ins_en_tete(maListe, 2, 'T');
+    ins_en_tete(maListe, 3, 'T');
+    ins_pos_k(maListe, 88, 7, 'T');
     afficherListe(maListe);
-    ins_en_tete(maListe, 1);
+    ins_pos_k(maListe, 88, 9, 'T');
+    suppr_en_tete(maListe, 'T');
+    suppr_pos_k(maListe, 10, 0);
     afficherListe(maListe);
-    ins_pos_k(maListe, 44, 3);
-    afficherListe(maListe);
-    ins_en_tete(maListe, 2);
-    afficherListe(maListe);
-    ins_en_tete(maListe, 3);
-    afficherListe(maListe);
-    ins_pos_k(maListe, 88, 7);
-    afficherListe(maListe);
-    ins_pos_k(maListe, 88, 9);
-    afficherListe(maListe);
-    suppr_en_tete(maListe);
-    afficherListe(maListe);
-
-
-   /* TypePtrListe ptr3 = (TypePtrListe*) malloc(sizeof(TypeCell)), coucou;
-    ptr3 -> suiv=NULL;
-    ptr3 -> info=13;
-    coucou=creation_elem(15);
-    printf("%d\n", coucou->info);
-
-    TypePtrListe Liste=NULL;
-    //ins_pos_k(maListe, 44, 1);*/
 
     return 0;
 }
