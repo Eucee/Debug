@@ -265,14 +265,59 @@ void lireFichier(char nomDuFichier[], char modeOuverture[]){
         fclose(fichier);
 }
 
+////////////////////////////////////////////////
 
+int fin(int v[]){
+    int i;
+    for (i =0; i+)
+}
+
+int triRapide(int v[], int g, int d){
+
+    //variables locales
+    int ind_pivot;
+
+    //affectation
+    g = v[i];
+    d = fin(v[]);
+
+    if(g < d){//sinon vecteur vide
+        ind_pivot=partitionner(v, g, d);
+        triRapide(v, g, ind_pivot - 1);
+        triRapide(v, ind_pivot + 1, d);
+    }
+    return v[];
+}
+
+int partitionner(int v[], int g, int d){
+
+    //variables locales
+    int pivot, i, j;
+
+    //affectation
+    pivot = v[g];
+    i = g + 1;
+    j = d;
+
+    while(i <= j){
+        if(v[i] <= pivot){
+            i++;
+        }//sinon
+        while(v[j] > pivot){
+            j--;
+        }
+        if(i < j){
+        //echanger(v, i, j);
+        i++; j--;
+    }
+    echanger(v, g, j);
+    return j;
+}
 
 /****************************************CORPS****************************************/
 
 int main()
 {
-
-lireFichier("test", "r");
 
     return 0;
 }
