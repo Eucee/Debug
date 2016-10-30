@@ -17,6 +17,7 @@ void supprDebut(TPtr *adr_liste, char bool_affiche);
 void supprPos(TPtr *adr_liste, int k, char bool_affiche);
 void accesVal(TPtr *adr_liste, int val, TPtr *adr_ptrCell);
 void insertListeTriee(TPtr *adr_liste, int val, char bool_affiche);
+void lireFichier(char nomDuFichier[], char modeOuverture[]);
 
 
 /**************************************FONCTIONS**************************************/
@@ -52,6 +53,9 @@ void afficherErreur(char typeErreur){
             break;
         case 'V':
             printf("valeur inexistante.\n");
+        break;
+        case 'F':
+            printf("ouverture du fichier impossible.\n");
         break;
     }
 }
@@ -197,6 +201,8 @@ void supprPos(TPtr *adr_liste, int k, char bool_affiche){
     supprDebut(&prec -> suiv, bool_affiche);
 }
 
+////////////////////////////////////////////////
+
 void accesVal(TPtr *adr_liste, int val, TPtr *adr_ptrCell){
 
     //variables
@@ -211,6 +217,8 @@ void accesVal(TPtr *adr_liste, int val, TPtr *adr_ptrCell){
     }afficherErreur('V');
     *adr_ptrCell = NULL; // si on ne trouve pas
 }
+
+////////////////////////////////////////////////
 
 void insertListeTriee(TPtr *adr_liste, int val, char bool_affiche){
 
@@ -235,27 +243,36 @@ void insertListeTriee(TPtr *adr_liste, int val, char bool_affiche){
     }//sinon insertion au milieu OU en fin de liste
     insDebut(&prec -> suiv, val, bool_affiche);
 }
+
+////////////////////////////////////////////////
+
+void lireFichier(char nomDuFichier[], char modeOuverture[]){
+
+    FILE* fichier = NULL;
+    fichier = fopen(nomDuFichier, modeOuverture);
+
+    if (fichier == NULL)
+    {
+        afficherErreur('F');;
+    }//sinon
+    char chaine[50] = "";
+
+    while (fgets(chaine, 50, fichier) != NULL)
+    {
+        printf("%s", chaine);
+    }
+
+        fclose(fichier);
+}
+
+
+
 /****************************************CORPS****************************************/
 
 int main()
 {
-    TPtr *maListe = (TPtr*) malloc(sizeof(TPtr));
-    int i;
 
-    for(i=10; i>1; i-=2){
-    insDebut(maListe, i, 'F');
-    }
-
-    afficherListe(maListe);
-
-    insertListeTriee(maListe, 5, 'F');
-    afficherListe(maListe);
-
-    TPtr *Liste = (TPtr*) malloc(sizeof(TPtr));
-    insertListeTriee(Liste, 5, 'F');
-    insertListeTriee(Liste, 5, 'F');
-    insertListeTriee(Liste, 1, 'F');
-    afficherListe(Liste);
+lireFichier("test", "r");
 
     return 0;
 }
