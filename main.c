@@ -23,7 +23,7 @@ void triRapide2(int vect[], int debut, int fin);
 int partitionner(int vect[], int debut, int fin);*/
 void echanger(int v[], int i, int j);
 void tri_bulles(int v[], int n);
-int echanger_jusqua_pos(int v[], int i, int en_desordre);
+void echanger_jusqua_pos(int v[], int i);
 void afficherVect(int v[], int taille);
 
 /**************************************FONCTIONS**************************************/
@@ -329,32 +329,29 @@ void afficherVect(int v[], int taille){
 void tri_bulles(int v[], int taille){
 
     //variable globale
-    int i, en_desordre;
+    int i;
 
     //affectation
     i = taille-1;
 
-    while (en_desordre){
-        en_desordre = echanger_jusqua_pos(v, i, en_desordre);
+    while (i >= 1){
+        echanger_jusqua_pos(v, i);
         i--; //le maximum est placé correctement, au n-1 passage on a une comparaison de moins a faire
     }
 }
 
-int echanger_jusqua_pos(int v[], int i, int en_desordre){
+void echanger_jusqua_pos(int v[], int i){
 
     //variable locale
     int j;
 
     //affectation
-    j = 1;
+    j = 0;
 
     while(j < i){
-        if(v[j] > v [j+1]){
-            echanger(v, j , j+1);
-            en_desordre = 1;
+        if(v[j] > v [j+1]) echanger(v, j , j+1);
         j++;
     }
-    return en_desordre;
 }
 
 /****************************************CORPS****************************************/
