@@ -16,9 +16,15 @@ void insPos(TPtr *adr_liste, int val, int pos, char bool_affiche);
 void supprDebut(TPtr *adr_liste, char bool_affiche);
 void supprPos(TPtr *adr_liste, int k, char bool_affiche);
 void accesVal(TPtr *adr_liste, int val, TPtr *adr_ptrCell);
-void insertListeTriee(TPtr *adr_liste, int val, char bool_affiche);
+void inserListeTriee(TPtr *adr_liste, int val, char bool_affiche);
 void lireFichier(char nomDuFichier[], char modeOuverture[]);
-
+/*void tri_rapide(int vect[],int taille);
+void triRapide2(int vect[], int debut, int fin);
+int partitionner(int vect[], int debut, int fin);*/
+void echanger(int v[], int i, int j);
+void tri_bulles(int v[], int n);
+int echanger_jusqua_pos(int v[], int i, int en_desordre);
+void afficherVect(int v[], int taille);
 
 /**************************************FONCTIONS**************************************/
 
@@ -220,7 +226,7 @@ void accesVal(TPtr *adr_liste, int val, TPtr *adr_ptrCell){
 
 ////////////////////////////////////////////////
 
-void insertListeTriee(TPtr *adr_liste, int val, char bool_affiche){
+void inserListeTriee(TPtr *adr_liste, int val, char bool_affiche){
 
     //verification d'existence de liste
     if (adr_liste == NULL)
@@ -266,58 +272,98 @@ void lireFichier(char nomDuFichier[], char modeOuverture[]){
 }
 
 ////////////////////////////////////////////////
-
-int fin(int v[]){
-    int i;
-    for (i =0; i+)
+/*void tri_rapide(int vect[],int taille){
+     triRapide2(vect,0,taille-1);
 }
 
-int triRapide(int v[], int g, int d){
+void triRapide2(int vect[], int debut, int fin){
 
-    //variables locales
-    int ind_pivot;
-
-    //affectation
-    g = v[i];
-    d = fin(v[]);
-
-    if(g < d){//sinon vecteur vide
-        ind_pivot=partitionner(v, g, d);
-        triRapide(v, g, ind_pivot - 1);
-        triRapide(v, ind_pivot + 1, d);
-    }
-    return v[];
+    if(debut < fin){
+       int pos_pivot = partitionner(vect, debut, fin);
+        triRapide2(vect, debut, pos_pivot - 1);
+        triRapide2(vect, pos_pivot + 1, fin);
+    }//sinon vecteur vide
 }
 
-int partitionner(int v[], int g, int d){
+int partitionner(int vect[], int debut, int fin){
 
     //variables locales
     int pivot, i, j;
 
     //affectation
-    pivot = v[g];
-    i = g + 1;
-    j = d;
+    pivot = vect[debut];
+    i = debut + 1;
+    j = fin;
 
     while(i <= j){
-        if(v[i] <= pivot){
+        if(vect[i] <= pivot){
             i++;
         }//sinon
-        while(v[j] > pivot){
+        while(vect[j] > pivot){
             j--;
         }
         if(i < j){
         //echanger(v, i, j);
         i++; j--;
     }
-    echanger(v, g, j);
+    echanger(vect, debut, j);
     return j;
+}*/
+
+void echanger(int v[], int i, int j){
+    int save = v[i];
+    v[i] = v[j];
+    v[j] = save;
+}
+
+void afficherVect(int v[], int taille){
+    int i;
+
+    for (i = 0 ; i < taille ; i++)
+    {
+        printf("%d ", v[i]);
+    }
+    printf("\n");
+}
+
+void tri_bulles(int v[], int taille){
+
+    //variable globale
+    int i, en_desordre;
+
+    //affectation
+    i = taille-1;
+
+    while (en_desordre){
+        en_desordre = echanger_jusqua_pos(v, i, en_desordre);
+        i--; //le maximum est placé correctement, au n-1 passage on a une comparaison de moins a faire
+    }
+}
+
+int echanger_jusqua_pos(int v[], int i, int en_desordre){
+
+    //variable locale
+    int j;
+
+    //affectation
+    j = 1;
+
+    while(j < i){
+        if(v[j] > v [j+1]){
+            echanger(v, j , j+1);
+            en_desordre = 1;
+        j++;
+    }
+    return en_desordre;
 }
 
 /****************************************CORPS****************************************/
 
 int main()
 {
-
+    int vect[8]= {13,1,23,7,4,14,15,2};
+    afficherVect(vect, 8);
+    tri_bulles(vect, 8);
+    afficherVect(vect, 8);
     return 0;
 }
