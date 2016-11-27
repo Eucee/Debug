@@ -7,7 +7,16 @@
 	<stdio.h>
 	<stdlib.h>
 
-1478019879 source:c:\users\etien_000\google drive\cours\m2 bioinfo\algo_progra\rapport_em\debug\main.c
+1480284763 source:c:\users\etien_000\google drive\cours\m2 bioinfo\algo_progra\rapport_em\debug\main.c
 	<stdio.h>
 	<stdlib.h>
+	<time.h>
+
+1480284032 source:c:\users\etien_000\google drive\cours\m2 bioinfo\algo_progra\rapport_em\debug\projet_algo.c
+	<stdlib.h>
+	<time.h>
+
+1480284051 source:c:\users\etien_000\google drive\cours\m2 bioinfo\algo_progra\rapport_em\debug\vecteur_et_tri.c
+	<stdlib.h>
+	<time.h>
 

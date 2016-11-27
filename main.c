@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 /**************************************DEFINITION******************************************/
 
@@ -8,23 +9,17 @@ typedef struct TCell* TPtr;
 typedef struct TCell TCell;
 
 //Fonction
-void afficherErreur(char typeErreur);
-TPtr *creationElem(int val);
-void afficherListe(TPtr *adr_liste);
-void insDebut(TPtr *adr_liste, int val, char bool_affiche);
-void insPos(TPtr *adr_liste, int val, int pos, char bool_affiche);
-void supprDebut(TPtr *adr_liste, char bool_affiche);
-void supprPos(TPtr *adr_liste, int k, char bool_affiche);
-void accesVal(TPtr *adr_liste, int val, TPtr *adr_ptrCell);
-void inserListeTriee(TPtr *adr_liste, int val, char bool_affiche);
-void lireFichier(char nomDuFichier[], char modeOuverture[]);
-/*void tri_rapide(int vect[],int taille);
-void triRapide2(int vect[], int debut, int fin);
-int partitionner(int vect[], int debut, int fin);*/
-void echanger(int v[], int i, int j);
-void tri_bulles(int v[], int n);
-void echanger_jusqua_pos(int v[], int dm, int echange);
-void afficherVect(int v[], int taille);
+void affiche_erreur(char typeErreur);
+TPtr *creation_elem(int val);
+void affiche_liste(TPtr *adr_liste);
+void ins_en_tete(TPtr *adr_liste, int val, char bool_affiche);
+void ins_pos_k(TPtr *adr_liste, int val, int pos_k, char bool_affiche);
+void suppr_en_tete(TPtr *adr_liste, char bool_affiche);
+void suppr_pos_k(TPtr *adr_liste, int k, char bool_affiche);
+void acces_val(TPtr *adr_liste, int val, TPtr *adr_val);
+void ins_liste_triee(TPtr *adr_liste, int val, char bool_affiche);
+void lire_fichier(char nom_fichier[], char mode_ouverture[]);
+
 
 /**************************************FONCTIONS**************************************/
 
@@ -48,9 +43,9 @@ typedef struct TCell{
 
 ////////////////////////////////////////////////
 
-void afficherErreur(char typeErreur){
+void affiche_erreur(char type_erreur){
     printf("Erreur: ");
-    switch(typeErreur){
+    switch(type_erreur){
         case 'L':
             printf("liste vide.\n");
             break;
@@ -68,8 +63,8 @@ void afficherErreur(char typeErreur){
 
 ////////////////////////////////////////////////
 
-TPtr *creationElem(int val){
-    TPtr cell = (TCell*) malloc(sizeof(TCell));
+TPtr *creation_elem(int val){
+    TPtr cell = (TPtr) malloc(sizeof(TPtr));
     cell -> info = val;
 
     //verification de reussite
@@ -82,12 +77,12 @@ TPtr *creationElem(int val){
 
 ////////////////////////////////////////////////
 
-void afficherListe(TPtr *adr_liste){
+void affiche_liste(TPtr *adr_liste){
 
     //verification d'existence de liste
     if (adr_liste == NULL)
     {
-        afficherErreur('L');
+        affiche_erreur('L');
         return;
     }
 
@@ -104,65 +99,65 @@ void afficherListe(TPtr *adr_liste){
 
 ////////////////////////////////////////////////
 
-void insDebut(TPtr *adr_liste, int val, char bool_affiche){
+void ins_en_tete(TPtr *adr_liste, int val, char bool_affiche){
 
     //verification d'existence de liste
     if (adr_liste == NULL)
     {
-        afficherErreur('L');
+        affiche_erreur('L');
         return;
     }
 
     // creation du nouvel element
     TPtr p_nouv;
-    p_nouv=creationElem(val);
+    p_nouv=creation_elem(val);
     // insertion de l'element au debut de la liste
     p_nouv -> suiv = *adr_liste;
     *adr_liste = p_nouv;
 
-    if (bool_affiche=='T') afficherListe(adr_liste);
+    if (bool_affiche=='T') affiche_liste(adr_liste);
 }
 
 ////////////////////////////////////////////////
 
-void insPos(TPtr *adr_liste, int val, int k, char bool_affiche){
+void ins_pos_k(TPtr *adr_liste, int val, int pos_k, char bool_affiche){
 
     //verification d'existence de liste
     if (adr_liste == NULL)
     {
-        afficherErreur('L');
+        affiche_erreur('L');
         return;
     }
 
     //variables
-    TPtr prec = NULL, p = *adr_liste;
+    TPtr p_prec = NULL, p = *adr_liste;
     int i = 1;
 
     //placement a la bonne position
-    while(p != NULL && i < k){
-        prec = p;
+    while(p != NULL && i < pos_k){
+        p_prec = p;
         p = p -> suiv;
         i++;
     }
-    if(k==1){ //insertion en debut de liste (cas de liste vide [p == NULL] ET de liste preexistante)
-        insDebut(adr_liste, val, bool_affiche);
+    if(pos_k==1){ //insertion en debut de liste (cas de liste vide [p == NULL] ET de liste preexistante)
+        ins_en_tete(adr_liste, val, bool_affiche);
         return;
-        }//sinon k>1
-    if (p == NULL && k!= i){//k > i (k>longueur de la liste)
-            afficherErreur('P');
+        }//sinon pos_k>1
+    if (p == NULL && pos_k!= i){//pos_k > i (pos_k>longueur de la liste)
+            affiche_erreur('P');
             return;
     }//sinon insertion en milieu de liste OU en fin de liste (p == NULL);
-    insDebut(&prec -> suiv, val, bool_affiche);
+    ins_en_tete(&p_prec -> suiv, val, bool_affiche);
 }
 
 ////////////////////////////////////////////////
 
-void supprDebut(TPtr *adr_liste, char bool_affiche){
+void suppr_en_tete(TPtr *adr_liste, char bool_affiche){
 
     //verification d'existence de liste
     if (adr_liste == NULL)
     {
-        afficherErreur('L');
+        affiche_erreur('L');
         return;
     }
 
@@ -172,44 +167,44 @@ void supprDebut(TPtr *adr_liste, char bool_affiche){
 
     free(p); //supression
 
-    if (bool_affiche=='T') afficherListe(adr_liste);
+    if (bool_affiche=='T') affiche_liste(adr_liste);
 }
 
 ////////////////////////////////////////////////
 
-void supprPos(TPtr *adr_liste, int k, char bool_affiche){
+void suppr_pos_k(TPtr *adr_liste, int k, char bool_affiche){
 
     //verification d'existence de liste
     if (adr_liste == NULL)
     {
-        afficherErreur('L');
+        affiche_erreur('L');
         return;
     }
 
     //variables
-    TPtr prec = NULL, p = *adr_liste;
+    TPtr p_prec = NULL, p = *adr_liste;
     int i = 1;
 
     //placement a la bonne position
     while(p != NULL && i < k){
-        prec = p;
+        p_prec = p;
         p = p -> suiv;
         i++;
     }
     if(k==1){ //insertion en debut de liste (cas de liste vide ET de liste preexistante)
-        supprDebut(adr_liste, bool_affiche);
+        suppr_en_tete(adr_liste, bool_affiche);
         return;
         }//sinon k>1
     if (p == NULL && k!= i){//k > i (k>longueur de la liste)
-            afficherErreur('P');
+            affiche_erreur('P');
             return;
     }//sinon insertion en milieu de liste OU en fin de liste (p == NULL);
-    supprDebut(&prec -> suiv, bool_affiche);
+    suppr_en_tete(&p_prec -> suiv, bool_affiche);
 }
 
 ////////////////////////////////////////////////
 
-void accesVal(TPtr *adr_liste, int val, TPtr *adr_ptrCell){
+void acces_val(TPtr *adr_liste, int val, TPtr *adr_val){
 
     //variables
     TPtr p = *adr_liste;
@@ -217,49 +212,49 @@ void accesVal(TPtr *adr_liste, int val, TPtr *adr_ptrCell){
     while(p != NULL){
         if(p -> info == val){//cas du match
         printf("%d\n", p->info);
-        adr_ptrCell = p; return;
+        adr_val = p; return;
         }
         p = p -> suiv; //sinon incrementation
-    }afficherErreur('V');
-    *adr_ptrCell = NULL; // si on ne trouve pas
+    }affiche_erreur('V');
+    *adr_val = NULL; // si on ne trouve pas
 }
 
 ////////////////////////////////////////////////
 
-void inserListeTriee(TPtr *adr_liste, int val, char bool_affiche){
+void ins_liste_triee(TPtr *adr_liste, int val, char bool_affiche){
 
     //verification d'existence de liste
     if (adr_liste == NULL)
     {
-        afficherErreur('L');
+        affiche_erreur('L');
         return;
     }
 
     //variables
-    TPtr p = *adr_liste; TPtr prec = NULL;
+    TPtr p = *adr_liste; TPtr p_prec = NULL;
 
     //placement a la bonne position
     while(p != NULL && val > p-> info){
-        prec = p;
+        p_prec = p;
         p = p -> suiv;
     }//si liste vide, insertion en tete
-    if (prec == NULL){
-        insDebut(adr_liste, val, bool_affiche);
+    if (p_prec == NULL){
+        ins_en_tete(adr_liste, val, bool_affiche);
         return;
     }//sinon insertion au milieu OU en fin de liste
-    insDebut(&prec -> suiv, val, bool_affiche);
+    ins_en_tete(&p_prec -> suiv, val, bool_affiche);
 }
 
 ////////////////////////////////////////////////
 
-void lireFichier(char nomDuFichier[], char modeOuverture[]){
+void lire_fichier(char nom_fichier[], char mode_ouverture[]){
 
     FILE* fichier = NULL;
-    fichier = fopen(nomDuFichier, modeOuverture);
+    fichier = fopen(nom_fichier, mode_ouverture);
 
     if (fichier == NULL)
     {
-        afficherErreur('F');;
+        affiche_erreur('F');;
     }//sinon
     char chaine[50] = "";
 
@@ -271,104 +266,28 @@ void lireFichier(char nomDuFichier[], char modeOuverture[]){
         fclose(fichier);
 }
 
-////////////////////////////////////////////////
-/*void tri_rapide(int vect[],int taille){
-     triRapide2(vect,0,taille-1);
-}
-
-void triRapide2(int vect[], int debut, int fin){
-
-    if(debut < fin){
-       int pos_pivot = partitionner(vect, debut, fin);
-        triRapide2(vect, debut, pos_pivot - 1);
-        triRapide2(vect, pos_pivot + 1, fin);
-    }//sinon vecteur vide
-}
-
-int partitionner(int vect[], int debut, int fin){
-
-    //variables locales
-    int pivot, i, j;
-
-    //affectation
-    pivot = vect[debut];
-    i = debut + 1;
-    j = fin;
-
-    while(i <= j){
-        if(vect[i] <= pivot){
-            i++;
-        }//sinon
-        while(vect[j] > pivot){
-            j--;
-        }
-        if(i < j){
-        //echanger(v, i, j);
-        i++; j--;
-    }
-    echanger(vect, debut, j);
-    return j;
-}*/
-
-void echanger(int v[], int i, int j){
-    int save = v[i];
-    v[i] = v[j];
-    v[j] = save;
-}
-
-void afficherVect(int v[], int taille){
-    int i;
-
-    for (i = 0 ; i < taille ; i++)
-    {
-        printf("%d ", v[i]);
-    }
-    printf("\n");
-}
-
-void tri_bulles(int v[], int taille){
-
-    //variable globale
-    int dm, echange;
-
-    //affectation
-    dm = taille-1;
-    echange = 1;
-
-    while (echange && dm >= 1){
-        echanger_jusqua_pos(v, dm, echange);
-        //le maximum est placé correctement, au n-1 passage on a une comparaison de moins a faire
-    }
-}
-
-void echanger_jusqua_pos(int v[], int dm, int echange){
-
-    //variable locale
-    int j, k;
-
-    //affectation
-    j = 0, echange = 0;
-
-    while(j < dm){
-        if(v[j] > v [j+1]){
-            echanger(v, j , j+1);
-            echange = 1 ;
-            k = j;
-            afficherVect(v, 8);
-        }
-        j++;
-    }
-    dm = k;
-    //printf("%d\n",j);
-}
-
 /****************************************CORPS****************************************/
 
 int main()
 {
-    int vect[8]= {13,1,23,7,4,14,15,2};
-    afficherVect(vect, 8);
-    tri_bulles(vect, 8);
-    afficherVect(vect, 8);
+    TPtr *tete = (TPtr*) malloc(sizeof(TPtr));
+    //tete = NULL;
+
+    /*ins_pos_k(tete, 56, 1, 'F');
+    ins_pos_k(tete, 33, 1, 'F');
+    ins_en_tete(tete, 1, 'F');
+    ins_pos_k(tete, 44, 3, 'F');
+    ins_en_tete(tete, 2, 'F');
+    ins_en_tete(tete, 3, 'F');
+    ins_pos_k(tete, 88, 7, 'F');
+    ins_pos_k(tete, 88, 9, 'F');
+    suppr_en_tete(tete, 'F');
+    suppr_pos_k(tete, 10, 'F');*/
+    affiche_liste(tete);
+
+    printf("\n");
+    TPtr *adr_val = (TPtr*) malloc(sizeof(TPtr));
+    acces_val(tete, 44, adr_val);
+    //printf("%d\n", adr_val->info);
     return 0;
 }
