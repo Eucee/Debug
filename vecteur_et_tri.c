@@ -4,9 +4,9 @@
 /**************************************DEFINITION******************************************/
 
 typedef enum bool bool;
-/*void tri_rapide(int vect[],int taille);
-void triRapide2(int vect[], int debut, int fin);
-int partitionner(int vect[], int debut, int fin);*/
+/*void tri_rapide(int *adr_vect,int taille);
+void triRapide2(int *adr_vect, int debut, int fin);
+int partitionner(int *adr_vect, int debut, int fin);*/
 void echanger(int *adr_vect, int pos1, int pos2);
 void tri_bulles(int *adr_vect, int taille_vect);
 void echanger_jusqua_pos(int *adr_vect, int *adr_taille_a_parcourir, bool aTrier);
@@ -20,46 +20,6 @@ enum bool{
 
 /**************************************FONCTIONS**************************************/
 
-////////////////////////////////////////////////
-
-/*void tri_rapide(int vect[],int taille){
-     triRapide2(vect,0,taille-1);
-}
-
-void triRapide2(int vect[], int debut, int fin){
-
-    if(debut < fin){
-       int pos_pivot = partitionner(vect, debut, fin);
-        triRapide2(vect, debut, pos_pivot - 1);
-        triRapide2(vect, pos_pivot + 1, fin);
-    }//sinon vecteur vide
-}
-
-int partitionner(int vect[], int debut, int fin){
-
-    //variables locales
-    int pivot, i, j;
-
-    //affectation
-    pivot = vect[debut];
-    i = debut + 1;
-    j = fin;
-
-    while(i <= j){
-        if(vect[i] <= pivot){
-            i++;
-        }//sinon
-        while(vect[j] > pivot){
-            j--;
-        }
-        if(i < j){
-        //echanger(v, i, j);
-        i++; j--;
-    }
-    echanger(vect, debut, j);
-    return j;
-}*/
-
 /*--------------------------------------------------------------------
 PROCEDURE afficherVect:
 -Entrée/Sortie: Pointeur sur vecteur adr_vect, l'adresse du vecteur à modifier
@@ -69,7 +29,7 @@ Précondition:
 -Le vecteur ne doit pas être nul
 
 Postcondition:
--Affichage de l'ensemble des éléments d'une vecteurs
+-Affichage de l'ensemble des éléments d'une vecteur
 --------------------------------------------------------------------*/
 void afficherVect(int *adr_vect, int taille_vect){
 
@@ -82,6 +42,17 @@ void afficherVect(int *adr_vect, int taille_vect){
     printf("\n");
 }
 
+/*--------------------------------------------------------------------
+PROCEDURE initialiserVect:
+-Entrée/Sortie: Pointeur sur vecteur adr_vect, l'adresse du vecteur à modifier
+-Entrée: Entier taille_vect, la taille du vecteur
+
+Précondition:
+-Le vecteur ne doit pas être nul
+
+Postcondition:
+-Initialise à 0 l'ensemble des éléments d'une vecteur
+--------------------------------------------------------------------*/
 void initialiserVect(int *adr_vect, int taille_vect){
     //Variable
     int posVect;//indice de position dans le vecteur
@@ -91,6 +62,74 @@ void initialiserVect(int *adr_vect, int taille_vect){
         adr_vect[posVect] = 0;
     }
 }
+
+void tri_rapide(int *adr_vect,int taille_vect){
+     triRapide2(adr_vect, 0, taille_vect-1);
+}
+/*--------------------------------------------------------------------
+PROCEDURE triRapide:
+-Entrée/Sortie: Pointeur sur vecteur adr_vect, l'adresse du vecteur à modifier
+-Entrée: Entier debut, début du vecteur
+-Entrée: Entier fin, fin du vecteur
+
+Précondition:
+-Le vecteur ne doit pas être nul
+
+Postcondition:
+-Trie par ordre croissant un vecteur contenant des entiers
+--------------------------------------------------------------------*/
+void triRapide2(int *adr_vect, int debut, int fin){
+
+    int pos_pivot = 0;
+
+    if(debut < fin){
+        pos_pivot = partitionner(adr_vect, debut, fin);
+        triRapide2(adr_vect, debut, pos_pivot - 1);
+        triRapide2(adr_vect, pos_pivot + 1, fin);
+    }//sinon le vecteur est vide (et inchangé)
+}
+
+/*--------------------------------------------------------------------
+FONCTION partitionner:
+-Entrée/Sortie: Pointeur sur vecteur adr_vect, l'adresse du vecteur à modifier
+-Entrée: Entier debut, début du vecteur
+-Entrée: Entier fin, fin du vecteur
+-Sortie: Entier pos2, position du nouveau pivot
+
+Précondition:
+-Le vecteur ne doit pas être nul
+
+Postcondition:
+-Tant que le vecteur ne devient pas nul (début > fin), échange les positions inférieures à la valeur d'un pivot avec celles qui lui sont supérieures, sinon renvoi la position d'un nouveau pivot
+--------------------------------------------------------------------*/
+
+int partitionner(int *adr_vect, int debut, int fin){
+
+    //variables locales
+    int pivot, pos1, pos2;
+
+    //affectation
+    pivot = adr_vect[debut];
+    pos1 = debut + 1;
+    pos2 = fin;
+
+    while(pos1 <= pos2){
+        if(adr_vect[pos1] <= pivot){// la valeur en cours est bien placée (= inf au pivot)
+            pos1++; //on avance depuis le début du vecteur pour tenter à la prochaine itération d'en trouver une mal placée
+        }else{//sinon l'élément est mal placé (= sup au pivot) et attend son transfert vers la fin du vecteur
+            while(adr_vect[pos2] > pivot){//tant que la valeur en cours est bien placée (= sup au pivot)
+                pos2--; //on recule depuis la fin du vecteur
+            }//on sort de boucle si finalement on trouve un élément mal placée en fin de vecteur (=inf au pivot)
+            if(pos1 < pos2){//on vérifie que les deux éléments mal placés sont échangeables
+                echanger(adr_vect, pos1, pos2);
+                pos1++; pos2--; //les deux sont bien placés, donc on décrémentd pour pour tenter à la prochaine itération d'en trouver un mal placé
+            }
+        }
+    }
+    echanger(adr_vect, debut, pos2);
+    return pos2;
+}
+
 /*--------------------------------------------------------------------
 PROCEDURE tri_bulles:
 -Entrée/Sortie: Pointeur sur vecteur adr_vect, l'adresse du vecteur à modifier
@@ -119,7 +158,7 @@ Précondition:
 -Le vecteur ne doit pas être nul
 
 Postcondition:
--Trié par ordre croissant un vecteur contenant des entiers
+-Trie par ordre croissant un vecteur contenant des entiers
 --------------------------------------------------------------------*/
 void tri_bulles(int *adr_vect, int taille_vect){
 
@@ -177,7 +216,7 @@ int main()
     afficherVect(vect, 8);
     //initialiserVect(vect, 8);
     //afficherVect(vect, 8);
-    tri_bulles(vect, 8);
+    tri_rapide(vect, 8);
     afficherVect(vect, 8);
 
     return 0;
